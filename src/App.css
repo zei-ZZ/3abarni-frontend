@@ -1,15 +1,7 @@
-/* App.css */
-.app-container {
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-}
-
-.registration-form {
-  display: flex;
+#root {
+  display: flex h-screen w-screen;
   flex-direction: column;
-}
-
-label {
-  margin-bottom: 8px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }

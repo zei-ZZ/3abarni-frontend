@@ -1,6 +1,7 @@
 // App.jsx
 import axios from "axios";
 import  { useState } from "react";
+import SignUpForm from "./components/SignUpForm";
 import "./App.css"; // Import a separate CSS file for styling
 
 function App() {
@@ -26,40 +27,12 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Existing content, if any */}
-      <div>
-        <h1>Your Existing App Content</h1>
-      </div>
-
-      {/* Registration Form Component */}
-      <form className="registration-form" onSubmit={onSubmit}>
-        <label>Email:</label>
-        <input
-          type="text"
-          name="Email"
-          value={form.Email || ""}
-          onChange={handleChange}
-        />
-
-        <label>Password:</label>
-        <input
-          type="password"
-          name="Password"
-          value={form.Password || ""}
-          onChange={handleChange}
-        />
-
-        {/* input an image */}
-        <label>Profile Picture:</label>
-        <input
-          type="file"
-          name="ProfilePic"
-          onChange={(e) => setForm({ ...form, ProfilePic: e.target.files[0] })}
-        />
-
-        <button type="submit">Submit</button>
-      </form>
+    <div id ="root" >
+      <SignUpForm
+        form={form}
+        handleChange={handleChange}
+        onSubmit={onSubmit}
+      />
     </div>
   );
 }

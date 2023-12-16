@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Lexand+Exa');
+
+body {
+  background: #FFFFFF;
+  /* White */
+  font-family: 'Press Start 2p', monospace;
+}
+
+
+.logo {
+  position: absolute;
+  width: 84px;;
+  height: 78px;
+  left: 8px;
+  top: 4px;
+}
+.welcome-text{
+  font-size: 25px;
+}
