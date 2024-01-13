@@ -8,9 +8,9 @@ const SignUpForm = () => {
   const [form, setForm] = useState({
     Username: "",
     lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    Email: "",
+    Password: "",
+    PasswordConfirmation: "",
   });
 
   const handleChange = (event) => {
@@ -106,16 +106,16 @@ const SignUpForm = () => {
             {/* Email Address */}
             <div className="mb-5">
               <label
-                htmlFor="email"
+                htmlFor="Email"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Email Address
               </label>
               <input
                 type="text"
-                id="email"
-                name="email"
-                value={form.email}
+                id="Email"
+                name="Email"
+                value={form.Email}
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="john.doe@example.com"
@@ -126,16 +126,16 @@ const SignUpForm = () => {
             {/* Password */}
             <div className="mb-5">
               <label
-                htmlFor="password"
+                htmlFor="Password"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Password
               </label>
               <input
                 type="password"
-                id="password"
-                name="password"
-                value={form.password}
+                id="Password"
+                name="Password"
+                value={form.Password}
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="********"
@@ -146,16 +146,16 @@ const SignUpForm = () => {
             {/* Confirm Password */}
             <div className="mb-5">
               <label
-                htmlFor="confirmPassword"
+                htmlFor="PasswordConfirmation"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Confirm Password
               </label>
               <input
                 type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={form.confirmPassword}
+                id="PasswordConfirmation"
+                name="PasswordConfirmation"
+                value={form.PasswordConfirmation}
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="********"

@@ -1,13 +1,13 @@
 // App.jsx
 
-import ChatInterface from "./components/ChatInterface";
+import SignUpForm from "./components/SignUpForm";
 import "./App.css"; // Import a separate CSS file for styling
 
 function App() {
 
   return (
     <div id ="root" >
-       <ChatInterface />
+       <SignUpForm />
     </div>
   );
 }
