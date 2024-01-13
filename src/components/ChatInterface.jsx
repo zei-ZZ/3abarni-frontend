@@ -6,15 +6,14 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    // Initialize SignalR connection
+    //Initialize SignalR connection
     startConnection();
-
-    // Add message listener to update state with incoming messages
+    //Add message listener to update state with incoming messages
     addMessageListener((messageData) => {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
-    // Clean up SignalR connection on component unmount
+    //Clean up SignalR connection on component unmount
     return () => {
       stopConnection();
     };
