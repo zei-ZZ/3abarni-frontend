@@ -1,7 +1,7 @@
 // ChatInterface.js
 
 import { useState, useEffect } from 'react';
-import signalRService from './signalRService'; // Import your SignalR service
+import signalRService from '../services/signalrService.js'; // Import your SignalR service
 
 const ChatInterface = () => {
   const [message, setMessage] = useState('');

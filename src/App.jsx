@@ -1,11 +1,16 @@
 // App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes
 import axios from "axios";
-import  { useState } from "react";
+import { useState } from "react";
+import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
-import "./App.css"; // Import a separate CSS file for styling
+import ForgetPassword from "./components/ForgetPassword";
+import "./App.css";
 
 function App() {
   const [form, setForm] = useState({});
+
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
@@ -27,13 +32,13 @@ function App() {
   };
 
   return (
-    <div id ="root" >
-      <SignUpForm
-        form={form}
-        handleChange={handleChange}
-        onSubmit={onSubmit}
-      />
-    </div>
+    <Router>
+      <Routes> {/* Wrap your routes with the Routes component */}
+        <Route path="/login" element={<LoginForm handleChange={handleChange} onSubmit={onSubmit} />} />
+        <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
+        <Route path="/forgetpassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
+      </Routes>
+    </Router>
   );
 }
 
