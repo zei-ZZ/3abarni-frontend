@@ -3,27 +3,24 @@ import UIImage from "../assets/images/pngegg (1).png"; // Import the UI image
 import LogoImage from "../assets/images/logo.png"; // Import the logo image
 import "../styles/SignUpForm.css"; // Import the component-specific CSS file
 import axiosInstance from "../utils/axiosInstance";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    Email: "",
+    Password: "",
   });
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
+
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Add your form submission logic here
     try {
-      const response = await axiosInstance.post("/Auth/login", form, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post("/Auth/login", form);
       console.log("Form submitted:", response.data);
     } catch (err) {
       console.error("error: ", err);
@@ -32,20 +29,21 @@ const LoginForm = () => {
 
   return (
     <div className="flex h-screen w-screen ">
-     
-
       {/* left side with form */}
 
-      <div className="flex-shrink-0 w-2/3 bg-light p-8 overflow-y-auto relative" style={{ padding: "5rem" }}>
+      <div
+        className="flex-shrink-0 w-2/3 bg-light p-8 overflow-y-auto relative"
+        style={{ padding: "5rem" }}
+      >
         {/* Logo */}
         <img src={LogoImage} alt="Logo" className="mb-8 logo" />
 
         {/* Form container */}
         <div>
-          <div className="welcome-text p-4 font-black" >
+          <div className="welcome-text p-4 font-black">
             Hello!
             <br />{" "}
-            <span className='font-extralight'style={{ color: "#FFD700" }}>
+            <span className="font-extralight" style={{ color: "#FFD700" }}>
               Good to see you again!{" "}
             </span>
           </div>
@@ -53,7 +51,7 @@ const LoginForm = () => {
             {/* Email Address */}
             <div className="mb-5">
               <label
-                htmlFor="email"
+                htmlFor="Email"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Email Address
@@ -61,8 +59,8 @@ const LoginForm = () => {
               <input
                 type="text"
                 id="email"
-                name="email"
-                value={form.email}
+                name="Email"
+                value={form.Email}
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="john.doe@example.com"
@@ -72,14 +70,17 @@ const LoginForm = () => {
 
             {/* Password */}
             <div className="mb-5">
-              <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <label
+                htmlFor="Password"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 Password
               </label>
               <input
                 type="password"
                 id="password"
-                name="password"
-                value={form.password}
+                name="Password"
+                value={form.Password}
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="********"
@@ -87,32 +88,33 @@ const LoginForm = () => {
               />
             </div>
             <div className="flex items-center justify-between">
-                   <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <input
-                        id="remember"
-                        aria-describedby="remember"
-                        type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-black dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-black dark:ring-offset-gray-800"
-                      />
-                    </div>
-                    <div className="ml-3 text-sm">
-                      <label className="text-black dark:text-gray-300">
-                        Remember me
-                      </label>
-                    </div>
-                  </div>
-                  <a
-                    onClick={() => navigate("/forgetpassword")}
-                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 cursor-pointer"
-                  >
-                    Forgot password?
-                  </a>
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="remember"
+                    aria-describedby="remember"
+                    type="checkbox"
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-black dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-black dark:ring-offset-gray-800"
+                  />
                 </div>
+                <div className="ml-3 text-sm">
+                  <label className="text-black dark:text-gray-300">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <a
+                onClick={() => navigate("/forgetpassword")}
+                className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 cursor-pointer"
+              >
+                Forgot password?
+              </a>
+            </div>
             {/* Submit Button */}
             <button
               type="submit"
-              className="group h-11 px-12 border-1 border-gray-100 rounded-2xl transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100 bg-black text-white font-semibold mt-6">
+              className="group h-11 px-12 border-1 border-gray-100 rounded-2xl transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100 bg-black text-white font-semibold mt-6"
+            >
               Account Login
             </button>
 
@@ -146,32 +148,44 @@ const LoginForm = () => {
                 </div>
               </button>
             </div>
-
-            
           </form>
           <div className="mt-10 text-gray-600 text-center sm:-mb-10">
-              <p className="text-xs">
-                By proceeding, you agree to our{" "} <a href="#" className="underline"> Terms of Use </a>{" "} and confirm you have read our{" "}
-                <a href="#" className="underline"> Privacy and Cookie Statement</a>.
-              </p>
-              <p className="text-xs">
-                This site is protected by reCAPTCHA and the{" "}
-                <a href="#" className="underline">
-                  Google Privacy Policy
-                </a>{" "}
-                and{" "}
-                <a href="#" className="underline">
-                  Terms of Service
-                </a>{" "}
-                apply.
-              </p>
-            </div>
+            <p className="text-xs">
+              By proceeding, you agree to our{" "}
+              <a href="#" className="underline">
+                {" "}
+                Terms of Use{" "}
+              </a>{" "}
+              and confirm you have read our{" "}
+              <a href="#" className="underline">
+                {" "}
+                Privacy and Cookie Statement
+              </a>
+              .
+            </p>
+            <p className="text-xs">
+              This site is protected by reCAPTCHA and the{" "}
+              <a href="#" className="underline">
+                Google Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a href="#" className="underline">
+                Terms of Service
+              </a>{" "}
+              apply.
+            </p>
+          </div>
         </div>
       </div>
-       {/* right side with UI image */}
-       <div className="flex-shrink-0 w-1/3 bg-yellow-400">
+      {/* right side with UI image */}
+      <div className="flex-shrink-0 w-1/3 bg-yellow-400">
         {/* Your UI picture goes here */}
-        <img src={UIImage} alt="UI" className="w-full h-full object-cover transform scale-x-[-1] " style={{ objectPosition: 'right' }} />
+        <img
+          src={UIImage}
+          alt="UI"
+          className="w-full h-full object-cover transform scale-x-[-1] "
+          style={{ objectPosition: "right" }}
+        />
       </div>
     </div>
   );
