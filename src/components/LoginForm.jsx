@@ -2,7 +2,7 @@ import { useState } from "react";
 import UIImage from "../assets/images/pngegg (1).png"; // Import the UI image
 import LogoImage from "../assets/images/logo.png"; // Import the logo image
 import "../styles/SignUpForm.css"; // Import the component-specific CSS file
-import axiosInstance from "../utils/AxiosInstance";
+import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
