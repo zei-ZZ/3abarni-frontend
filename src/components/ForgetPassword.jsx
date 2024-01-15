@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UIImage from "../assets/images/UI.png"; // Import the UI image
 import LogoImage from "../assets/images/logo.png"; // Import the logo image
-import axiosInstance from "../utils/AxiosInstance";
+import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from 'react-router-dom';
 import "../styles/ForgetPassword.css"; // Import the component-specific CSS file
 import ImageA from "../assets/images/pngegg copie 2.png"

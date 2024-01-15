@@ -24,7 +24,7 @@ function App() {
     formData.append("ProfilePic", form.ProfilePic);
 
     console.log("aaaa");
-    await axios.post("https://localhost:7225/api/Auth/register", formData, {
+    await axios.post("https://localhost:7225/Auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
