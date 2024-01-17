@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { theme, Modal, Box, Typography, Button } from './MaterialUIConfig';
 import UIImage from "../assets/images/UI.png"; // Import the UI image
 import LogoImage from "../assets/images/logo.png"; // Import the logo image
 import "../styles/SignUpForm.css"; // Import the component-specific CSS file
 import axiosInstance from "../utils/axiosInstance";
 
 const SignUpForm = () => {
+
   const [form, setForm] = useState({
     Username: "",
     lastName: "",
@@ -12,6 +14,8 @@ const SignUpForm = () => {
     Password: "",
     PasswordConfirmation: "",
   });
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -27,9 +31,15 @@ const SignUpForm = () => {
         },
       });
       console.log("Form submitted:", response.data);
+      setModalOpen(true);
     } catch (err) {
       console.error("error: ", err);
     }
+  };
+
+  const handleCloseModal = () => {
+    // Close the modal
+    setModalOpen(false);
   };
 
   return (
@@ -229,6 +239,46 @@ const SignUpForm = () => {
           </form>
         </div>
       </div>
+      {/* Modal */}
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            width: 500,
+            backgroundColor: "white",
+            border: "2px solid #000",
+            borderTop: '7px solid #FFD700',
+            borderRadius: '12px',
+            boxShadow: 24,
+            p: 4,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: 'center',
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h5" sx={{ fontWeight: 'bold', color : "black" }} component="h2">
+            Confirm your email
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Hi {form.Username}!
+             Please confirm your email address by clicking the link sent to <strong>{form.Email}</strong>
+          </Typography>
+          <Button onClick={handleCloseModal} 
+          variant="contained" 
+          color="primary" 
+          sx={{ mt: 2, width: '100%', paddingTop: '11px', fontSize: '1rem', 
+          paddingBottom: '12px', textTransform: 'none', backgroundColor: "black", 
+          color: '#fff', marginLeft: 'auto', marginRight: 'auto',}}>
+            I've Confirmed My Email
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 };

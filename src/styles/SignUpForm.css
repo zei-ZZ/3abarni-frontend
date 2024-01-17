@@ -16,3 +16,8 @@ body {
 .welcome-text{
   font-size: 25px;
 }
+.MuiButton-containedPrimary:hover {
+  background-color: #FFD700 !important; 
+  color: #000000 !important;
+}
+
