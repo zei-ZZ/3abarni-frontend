@@ -1,7 +1,9 @@
 import * as signalR from "@microsoft/signalr";
 
 const hubConnection = new signalR.HubConnectionBuilder()
-  .withUrl("https://localhost:7225/Hubs/ChatHub")
+  .withUrl("https://localhost:7225/Hubs/ChatHub", {
+    accessTokenFactory: () => localStorage.getItem('token'),
+  })
   .configureLogging(signalR.LogLevel.Information)
   .build();
 console.log(signalR.VERSION);
@@ -27,8 +29,8 @@ export const addMessageListener = (callback) => {
   });
 };
 
-export const sendMessage = async (user, message) => {
-  await hubConnection.invoke('SendMessage', user, message)
+export const sendMessage = async (sender, receiver, message) => {
+  await hubConnection.invoke('SendMessage', sender, receiver, message)
     .catch((error) => console.error(error));
 };
 

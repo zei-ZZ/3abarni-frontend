@@ -1,14 +1,13 @@
 // App.jsx
-import React from 'react';
+//import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes
 import axios from "axios";
 import { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
-import ContactSearch from "./components/ContactSearch";
-import SideBar from "./components/SideBar";
-import ForgetPassword from "./components/ForgetPassword";
+import SideBar from "./components/Sidebar";
 import ReceiverBar from "./components/ReceiverBar";
+import ParentComponent from "./components/ParentComponent"; 
 import "./App.css";
 
 function App() {
@@ -39,10 +38,10 @@ function App() {
       <Routes> {/* Wrap your routes with the Routes component */}
         <Route path="/login" element={<LoginForm handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/forgetpassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/contactsearch" element={<ContactSearch handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/sidebar" element={<SideBar handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/receiver" element={<ReceiverBar handleChange={handleChange} onSubmit={onSubmit} />} />
+      <Route path="/ParentComponent" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
+        
       </Routes>
     </Router>
   );

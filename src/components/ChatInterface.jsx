@@ -1,19 +1,33 @@
-import  { useState, useEffect } from 'react';
+
+import jwtDecode from 'jwt-decode'; // Correct import statement
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { startConnection, addMessageListener, sendMessage, stopConnection } from '../services/signalrService';
 
-const ChatInterface = () => {
+const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [senderUsername, setSenderUsername] = useState('');
 
   useEffect(() => {
-    //Initialize SignalR connection
+    // Initialize SignalR connection
     startConnection();
-    //Add message listener to update state with incoming messages
+
+    // Decode the JWT to get the sender's username
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const usernameClaim = 'name'; // Replace with the actual claim name for the username
+      const senderUsername = decodedToken[usernameClaim];
+      setSenderUsername(senderUsername);
+    }
+
+    // Add message listener to update state with incoming messages
     addMessageListener((messageData) => {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
-    //Clean up SignalR connection on component unmount
+    // Clean up SignalR connection on component unmount
     return () => {
       stopConnection();
     };
@@ -21,9 +35,9 @@ const ChatInterface = () => {
 
   const handleSendMessage = async () => {
     try {
-      if (message.trim() !== '') {
-        const user = 'user';
-        await sendMessage(user, message);
+      if (message.trim() !== '' && selectedContact) {
+        // Use the selectedContact as the receiver
+        await sendMessage(senderUsername, selectedContact, message);
         setMessage('');
       }
     } catch (error) {
@@ -59,4 +73,8 @@ const ChatInterface = () => {
   );
 };
 
-export default ChatInterface;
+ChatInterface.propTypes = {
+  selectedContact: PropTypes.string, // Replace with the appropriate prop type
+};
+
+export { ChatInterface as default };
