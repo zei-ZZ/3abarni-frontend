@@ -1,5 +1,4 @@
-
-import jwtDecode from 'jwt-decode'; // Correct import statement
+import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { startConnection, addMessageListener, sendMessage, stopConnection } from '../services/signalrService';
@@ -14,7 +13,8 @@ const ChatInterface = ({ selectedContact }) => {
     startConnection();
 
     // Decode the JWT to get the sender's username
-    const token = localStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
+    console.log('hellooooo',token);
     if (token) {
       const decodedToken = jwtDecode(token);
       const usernameClaim = 'name'; // Replace with the actual claim name for the username
@@ -77,4 +77,4 @@ ChatInterface.propTypes = {
   selectedContact: PropTypes.string, // Replace with the appropriate prop type
 };
 
-export { ChatInterface as default };
+export default ChatInterface;

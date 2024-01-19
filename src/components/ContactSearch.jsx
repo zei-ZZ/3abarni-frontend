@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import PropTypes from 'prop-types';
+
 const ContactSearch  = ({ onContactSelect }) =>{
     const [searchTerm, setSearchTerm] = useState('');
     const [contacts, setContacts] = useState([]);
@@ -136,6 +137,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
         </div>
     );
 }
+
 ContactSearch.propTypes = {
     onContactSelect: PropTypes.func.isRequired,
 };
