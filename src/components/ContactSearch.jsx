@@ -1,9 +1,9 @@
-import * as React from 'react';
+//import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
+//import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+//import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
 import "../styles/ContactSearch.css";
@@ -11,10 +11,13 @@ import axiosInstance from "../utils/axiosInstance";
 import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
+import PropTypes from 'prop-types';
 
-const ContactSearch = () => {
+const ContactSearch  = ({ onContactSelect }) =>{
     const [searchTerm, setSearchTerm] = useState('');
     const [contacts, setContacts] = useState([]);
+    
+    const [selectedContact, setSelectedContact] = useState(null);
 
     useEffect(() => {
         axiosInstance
@@ -28,7 +31,7 @@ const ContactSearch = () => {
             });
     }, []);
 
-    const [selectedContact, setSelectedContact] = useState(null);
+   
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -36,6 +39,8 @@ const ContactSearch = () => {
 
     const handleCardClick = (contactId) => {
         setSelectedContact(contactId === selectedContact ? null : contactId);
+        onContactSelect(contactId);
+   
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -133,4 +138,7 @@ const ContactSearch = () => {
     );
 }
 
+ContactSearch.propTypes = {
+    onContactSelect: PropTypes.func.isRequired,
+};
 export default ContactSearch;

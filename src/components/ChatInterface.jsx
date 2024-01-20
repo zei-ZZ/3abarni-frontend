@@ -1,19 +1,29 @@
-import  { useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { startConnection, addMessageListener, sendMessage, stopConnection } from '../services/signalrService';
 
-const ChatInterface = () => {
+const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [senderUserId, setSenderUserId] = useState('');
 
   useEffect(() => {
-    //Initialize SignalR connection
     startConnection();
-    //Add message listener to update state with incoming messages
+
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userIdClaim = 'user_id';
+      const senderUserId = decodedToken[userIdClaim];
+      setSenderUserId(senderUserId);
+    }
+
     addMessageListener((messageData) => {
+      console.log('Received message:', messageData); 
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
-    //Clean up SignalR connection on component unmount
     return () => {
       stopConnection();
     };
@@ -21,9 +31,15 @@ const ChatInterface = () => {
 
   const handleSendMessage = async () => {
     try {
-      if (message.trim() !== '') {
-        const user = 'user';
-        await sendMessage(user, message);
+      console.log("selectedContact", selectedContact);
+      console.log("senderUserId", senderUserId);
+      if (message.trim() !== '' && selectedContact) {
+        // Use the selectedContact as the receiver
+        await sendMessage(senderUserId, selectedContact, message);
+        
+        // Display the sent message in the chat interface
+        setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
+        console.log(message);
         setMessage('');
       }
     } catch (error) {
@@ -37,7 +53,7 @@ const ChatInterface = () => {
       <div className="overflow-y-auto p-4 max-h-96 border border-gray-300 w-96">
         {messages.map((msg, index) => (
           <div key={index} className="my-2">
-            <strong>{msg.user}:</strong> {msg.message}
+            {msg.user}: {msg.message}
           </div>
         ))}
       </div>
@@ -57,6 +73,10 @@ const ChatInterface = () => {
       </div>
     </div>
   );
+};
+
+ChatInterface.propTypes = {
+  selectedContact: PropTypes.string,
 };
 
 export default ChatInterface;

@@ -5,6 +5,7 @@ import "../styles/SignUpForm.css"; // Import the component-specific CSS file
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
+
 const LoginForm = () => {
   const [form, setForm] = useState({
     Email: "",
@@ -22,9 +23,14 @@ const LoginForm = () => {
     try {
       const response = await axiosInstance.post("/Auth/login", form);
       console.log("Form submitted:", response.data);
+      //const { token } = response.data;
+      window.localStorage.setItem('token', response.data);
+      navigate("/ParentComponent");
     } catch (err) {
       console.error("error: ", err);
-    }
+      if (err.response && err.response.status === 401) {
+        navigate("/ForgetPassword");
+    }}
   };
 
   return (

@@ -99,15 +99,6 @@ const ForgetPassword = () => {
                 </div>
             </div>
             </div>
-
-
-      
-      
-      
-     
-      
-
-      
     </div>
 
   );
