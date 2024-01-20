@@ -6,28 +6,24 @@ import { startConnection, addMessageListener, sendMessage, stopConnection } from
 const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [senderUsername, setSenderUsername] = useState('');
+  const [senderUserId, setSenderUserId] = useState('');
 
   useEffect(() => {
-    // Initialize SignalR connection
     startConnection();
 
-    // Decode the JWT to get the sender's username
     const token = window.localStorage.getItem('token');
-    console.log('hellooooo',token);
     if (token) {
       const decodedToken = jwtDecode(token);
-      const usernameClaim = 'name'; // Replace with the actual claim name for the username
-      const senderUsername = decodedToken[usernameClaim];
-      setSenderUsername(senderUsername);
+      const userIdClaim = 'user_id';
+      const senderUserId = decodedToken[userIdClaim];
+      setSenderUserId(senderUserId);
     }
 
-    // Add message listener to update state with incoming messages
     addMessageListener((messageData) => {
+      console.log('Received message:', messageData); 
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
-    // Clean up SignalR connection on component unmount
     return () => {
       stopConnection();
     };
@@ -35,9 +31,15 @@ const ChatInterface = ({ selectedContact }) => {
 
   const handleSendMessage = async () => {
     try {
+      console.log("selectedContact", selectedContact);
+      console.log("senderUserId", senderUserId);
       if (message.trim() !== '' && selectedContact) {
         // Use the selectedContact as the receiver
-        await sendMessage(senderUsername, selectedContact, message);
+        await sendMessage(senderUserId, selectedContact, message);
+        
+        // Display the sent message in the chat interface
+        setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
+        console.log(message);
         setMessage('');
       }
     } catch (error) {
@@ -51,7 +53,7 @@ const ChatInterface = ({ selectedContact }) => {
       <div className="overflow-y-auto p-4 max-h-96 border border-gray-300 w-96">
         {messages.map((msg, index) => (
           <div key={index} className="my-2">
-            <strong>{msg.user}:</strong> {msg.message}
+            {msg.user}: {msg.message}
           </div>
         ))}
       </div>
@@ -74,7 +76,7 @@ const ChatInterface = ({ selectedContact }) => {
 };
 
 ChatInterface.propTypes = {
-  selectedContact: PropTypes.string, // Replace with the appropriate prop type
+  selectedContact: PropTypes.string,
 };
 
 export default ChatInterface;

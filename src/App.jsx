@@ -8,6 +8,7 @@ import SignUpForm from "./components/SignUpForm";
 import SideBar from "./components/Sidebar";
 import ReceiverBar from "./components/ReceiverBar";
 import ParentComponent from "./components/ParentComponent"; 
+import ForgetPassword from "./components/ForgetPassword";
 import "./App.css";
 
 function App() {
@@ -40,8 +41,8 @@ function App() {
         <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/sidebar" element={<SideBar handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/receiver" element={<ReceiverBar handleChange={handleChange} onSubmit={onSubmit} />} />
-      <Route path="/ParentComponent" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
-        
+        <Route path="/ParentComponent" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
+        <Route path="/ForgetPassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
       </Routes>
     </Router>
   );
