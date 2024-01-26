@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { startConnection, addMessageListener, sendMessage, stopConnection } from '../services/signalrService';
+import { startConnection, addMessageListener, sendMessageToUser, stopConnection } from '../services/signalrService';
 
 const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
@@ -35,7 +35,7 @@ const ChatInterface = ({ selectedContact }) => {
       console.log("senderUserId", senderUserId);
       if (message.trim() !== '' && selectedContact) {
         // Use the selectedContact as the receiver
-        await sendMessage(senderUserId, selectedContact, message);
+        await sendMessageToUser(selectedContact, message);
         
         // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
