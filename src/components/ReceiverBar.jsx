@@ -8,9 +8,9 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 const ReceiverBar = ({ receiver }) => {
   return (
-    <AppBar position="static" style={{ backgroundColor: '#F8F8F8' }}>
-      <Toolbar >
-        <Avatar alt="chams" src=""  />
+    <AppBar position="static" style={{ backgroundColor: '#F8F8F8', boxShadow: 'none' }}>
+      <Toolbar>
+        <Avatar alt="chams" src="" />
 
         <div style={{ marginLeft: '10px', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'black' }}>

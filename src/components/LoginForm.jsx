@@ -25,11 +25,11 @@ const LoginForm = () => {
       console.log("Form submitted:", response.data);
       //const { token } = response.data;
       window.localStorage.setItem('token', response.data);
-      navigate("/ParentComponent");
+      navigate("/chat");
     } catch (err) {
       console.error("error: ", err);
       if (err.response && err.response.status === 401) {
-        navigate("/ForgetPassword");
+        navigate("/forgetpassword");
     }}
   };
 

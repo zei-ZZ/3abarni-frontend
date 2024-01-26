@@ -55,7 +55,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
                 fontWeight: 600,
                 fontSize: '32px',
                 lineHeight: '44px',
-                marginTop: '15px',
+                marginTop: '5px',
                 marginBottom: '25px',
                 marginLeft: '5.5px'
             }}
