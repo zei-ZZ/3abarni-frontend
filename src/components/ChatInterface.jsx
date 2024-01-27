@@ -24,6 +24,7 @@ const ChatInterface = ({ selectedContact }) => {
 
     addMessageListener((messageData) => {
       console.log('Received message:', messageData);
+      //setMessages(() => [messageData]); this solves the duplicated received message but the previous received message is no longer displayed after we receive a new message
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
