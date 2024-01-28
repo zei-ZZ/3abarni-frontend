@@ -28,7 +28,7 @@ const ReceiverBar = ({ selectedContact }) => {
 
   return (
     <AppBar position="static" style={{ backgroundColor: '#F8F8F8', boxShadow: 'none' }}>
-      <Toolbar>
+      <Toolbar style={{ borderBottom: '1px solid #ddd', padding : '10px' }}>
         <Avatar alt="receiver_profile_pic" src={backend_url + "/" + userData?.profilePicPath} />
 
         <div style={{ marginLeft: '10px', flex: 1, display: 'flex', flexDirection: 'column' }}>

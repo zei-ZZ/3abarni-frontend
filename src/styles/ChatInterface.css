@@ -1,0 +1,17 @@
+/* Add a common class for styling */
+.message {
+    border-radius: 0.5rem; 
+  }
+  
+  .sent-message {
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    align-self: flex-end; /* Align sent messages to the right */
+  }
+  
+  .received-message {
+    background-color: rgb(0, 0, 0);
+    color: #fff;
+    align-self: flex-start; /* Align received messages to the left */
+  }
+  

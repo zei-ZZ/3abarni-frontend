@@ -16,18 +16,18 @@ const ParentComponent = () => {
     };
 
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 14fr 1fr 1fr', gap: '16px', width: '100%' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 14fr 1fr 1fr', gap: '0px', width: '100%', height: '100vh' }}>
             {/* Render SideBar */}
             <SideBar />
             {/* Render ContactSearch and pass the handleContactSelect function */}
-            <div className="contacts">
+            <div className="contacts" style={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid #ddd' }}>
                 <ContactSearch onContactSelect={handleContactSelect} />
             </div>
             {/* Conditional rendering: show ReceiverBar and ChatInterface if selectedContact is truthy, otherwise show alternative content */}
             {selectedContact ? (
-                <div className="chat">
+                <div className="chat" style={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid #ddd' }}>
                     <ReceiverBar selectedContact={selectedContact}/>
-                    <ChatInterface selectedContact={selectedContact} style={{ gridColumn: 'span 2' }} />
+                    <ChatInterface selectedContact={selectedContact} />
                 </div>
             ) : (
                 <div className="alternative-content">

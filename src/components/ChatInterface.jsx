@@ -5,6 +5,7 @@ import { startConnection, addMessageListener, sendMessageToUser, stopConnection 
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoIosSend } from "react-icons/io";
 import { IoIosLink } from "react-icons/io";
+import "../styles/ChatInterface.css";
 
 const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
@@ -40,7 +41,6 @@ const ChatInterface = ({ selectedContact }) => {
       if (message.trim() !== '' && selectedContact) {
         // Use the selectedContact as the receiver
         await sendMessageToUser(selectedContact, message);
-
         // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
         console.log(message);
@@ -52,25 +52,26 @@ const ChatInterface = ({ selectedContact }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center">
+    <div id="big-box" className="flex flex-col h-screen items-center justify-between">
       {/* Display the chat messages */}
-      <div className="overflow-y-auto p-4 max-h-96 w-96">
+      <div id="messages" className="overflow-y-auto p-4 flex-grow" style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         {messages.map((msg, index) => (
           <div
             key={index}
+            className={`my-2 p-2 rounded-md message ${msg.user === senderUserId ? 'sent-message' : 'received-message'}`}
             style={{
-              backgroundColor: msg.user === senderUserId ? "#FFFFFF" : "#000000",
-              color: msg.user === senderUserId ? "#000000" : "#FFFFFF",
-              border: msg.user === senderUserId ? "2px solid #FFB61D" : "none",
+              alignSelf: msg.user === senderUserId ? 'flex-end' : 'flex-start',
+              maxWidth: '50%',  // Set maximum width to 50%
+              wordBreak: 'break-word',  // Break long words
             }}
-            className="my-2 p-2 rounded-md"
           >
             {msg.message}
           </div>
         ))}
       </div>
+
       {/* Message input and send button */}
-      <div className="p-4 bg-white w-96 rounded-lg flex items-center">
+      <div id="box" className="p-4 bg-white flex items-center w-full fixed bottom-0" style={{ padding: '10px', width: '48%' }}>
         {/* Attachments icon */}
         <div className="p-1">
           <button className="text-black">
@@ -103,7 +104,7 @@ const ChatInterface = ({ selectedContact }) => {
           </button>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
