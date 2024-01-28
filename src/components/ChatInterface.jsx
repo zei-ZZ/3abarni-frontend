@@ -5,12 +5,14 @@ import { startConnection, addMessageListener, sendMessageToUser, stopConnection 
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoIosSend } from "react-icons/io";
 import { IoIosLink } from "react-icons/io";
+import Picker from 'emoji-picker-react';
 import "../styles/ChatInterface.css";
 
 const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [senderUserId, setSenderUserId] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State for emoji picker visibility
 
   useEffect(() => {
     startConnection();
@@ -49,6 +51,12 @@ const ChatInterface = ({ selectedContact }) => {
     } catch (error) {
       console.error('Error sending message:', error);
     }
+  };
+
+  const onEmojiClick = (emojiObject, event) => {
+    // console.log(emojiObject.emoji);
+    setMessage((prevInput) => prevInput + emojiObject.emoji);
+    setShowEmojiPicker(false);
   };
 
   return (
@@ -91,10 +99,15 @@ const ChatInterface = ({ selectedContact }) => {
         </div>
 
         {/* Emoji icon */}
-        <div className="p-1">
-          <button className="text-black">
+        <div className="p-1" style={{ position: 'relative' }}>
+          <button className="text-black" onClick={() => setShowEmojiPicker((val) => !val)}>
             <BsEmojiSmile size={24} />
           </button>
+          {showEmojiPicker && (
+            <div className="emoji-picker-container">
+              <Picker onEmojiClick={onEmojiClick} />
+            </div>
+          )}
         </div>
 
         {/* Send button */}
