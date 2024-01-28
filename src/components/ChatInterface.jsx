@@ -1,7 +1,11 @@
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { startConnection, addMessageListener, sendMessage, stopConnection } from '../services/signalrService';
+import { startConnection, addMessageListener, sendMessageToUser, stopConnection } from '../services/signalrService';
+import { BsEmojiSmile } from "react-icons/bs";
+import { IoIosSend } from "react-icons/io";
+import { IoIosLink } from "react-icons/io";
+import "../styles/ChatInterface.css";
 
 const ChatInterface = ({ selectedContact }) => {
   const [message, setMessage] = useState('');
@@ -20,7 +24,8 @@ const ChatInterface = ({ selectedContact }) => {
     }
 
     addMessageListener((messageData) => {
-      console.log('Received message:', messageData); 
+      console.log('Received message:', messageData);
+      //setMessages(() => [messageData]); this solves the duplicated received message but the previous received message is no longer displayed after we receive a new message
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
@@ -35,8 +40,7 @@ const ChatInterface = ({ selectedContact }) => {
       console.log("senderUserId", senderUserId);
       if (message.trim() !== '' && selectedContact) {
         // Use the selectedContact as the receiver
-        await sendMessage(senderUserId, selectedContact, message);
-        
+        await sendMessageToUser(selectedContact, message);
         // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
         console.log(message);
@@ -48,28 +52,57 @@ const ChatInterface = ({ selectedContact }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center">
+    <div id="big-box" className="flex flex-col h-screen items-center justify-between">
       {/* Display the chat messages */}
-      <div className="overflow-y-auto p-4 max-h-96 border border-gray-300 w-96">
+      <div id="messages" className="overflow-y-auto p-4 flex-grow" style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         {messages.map((msg, index) => (
-          <div key={index} className="my-2">
-            {msg.user}: {msg.message}
+          <div
+            key={index}
+            className={`my-2 p-2 rounded-md message ${msg.user === senderUserId ? 'sent-message' : 'received-message'}`}
+            style={{
+              alignSelf: msg.user === senderUserId ? 'flex-end' : 'flex-start',
+              maxWidth: '50%',  // Set maximum width to 50%
+              wordBreak: 'break-word',  // Break long words
+            }}
+          >
+            {msg.message}
           </div>
         ))}
       </div>
 
       {/* Message input and send button */}
-      <div className="p-4 bg-gray-300 w-96">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
-          className="border p-2 w-full"
-        />
-        <button onClick={handleSendMessage} className="mt-2 bg-blue-500 text-white p-2 rounded">
-          Send
-        </button>
+      <div id="box" className="p-4 bg-white flex items-center w-full fixed bottom-0" style={{ padding: '10px', width: '48%' }}>
+        {/* Attachments icon */}
+        <div className="p-1">
+          <button className="text-black">
+            <IoIosLink size={24} />
+          </button>
+        </div>
+
+        {/* Input field */}
+        <div className="flex-grow">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Write a message ..."
+            className="border-none outline-none p-1 w-full"
+          />
+        </div>
+
+        {/* Emoji icon */}
+        <div className="p-1">
+          <button className="text-black">
+            <BsEmojiSmile size={24} />
+          </button>
+        </div>
+
+        {/* Send button */}
+        <div className="p-1">
+          <button onClick={handleSendMessage} className="bg-black text-white p-1 rounded">
+            <IoIosSend size={24} />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,17 +1,50 @@
-// Sidebar.jsx
-import { useState } from 'react';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { LuUsers2 } from 'react-icons/lu';
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 import LogoImage from '../assets/images/logo.png';
-import { CgProfile } from 'react-icons/cg'; // Import the profile icon
-import { SlLogout } from 'react-icons/sl'; // Import the logout icon
+import { SlLogout } from 'react-icons/sl';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
+import Avatar from '@mui/material/Avatar';
+import axiosInstance from "../utils/axiosInstance";
+
 const Sidebar = () => {
-const [activeButton, setActiveButton] = useState(null);
-  
+  const [activeButton, setActiveButton] = useState(null);
+  const [senderUserId, setSenderUserId] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  const backend_url = import.meta.env.VITE_BackendURL;
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userIdClaim = 'user_id';
+      const senderUserId = decodedToken[userIdClaim];
+      setSenderUserId(senderUserId);
+      //console.log("waaa sa7bi",senderUserId);
+    }
+    axiosInstance
+      .get(`/users/${senderUserId}`)
+      .then((response) => {
+        // console.log("waaa sa7bi",response.data);
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching user:', error);
+      });
+  }, [senderUserId]);
 
   const handleButtonClick = (buttonName) => {
+    navigate("/" + buttonName);
     setActiveButton(buttonName);
+  };
+
+  const handleButtonLogoutClick = () => {
+    setActiveButton(null); // Clear the active button on logout
   };
 
   return (
@@ -78,7 +111,7 @@ const [activeButton, setActiveButton] = useState(null);
           cursor: 'pointer',
           marginBottom: '20px',
         }}
-        onClick={() => handleButtonClick('contacts')}
+        onClick={() => handleButtonClick('groups')}
       >
         <LuUsers2 size={20} />
       </button>
@@ -90,42 +123,43 @@ const [activeButton, setActiveButton] = useState(null);
           background: activeButton === 'settings' ? '#333' : 'transparent',
           color: activeButton === 'settings' ? '#FFF' : '#000',
           cursor: 'pointer',
+          marginBottom: '20px',
         }}
         onClick={() => handleButtonClick('settings')}
       >
         <IoSettingsOutline size={20} />
       </button>
-    {/* Profile  button */}
-    <div style ={{marginTop : '250px'}}>
-      <button
-  style={{
-    border: 'none',
-    background: activeButton === 'profile' ? '#333' : 'transparent',
-    color: activeButton === 'profile' ? '#FFF' : '#000',
-    cursor: 'pointer',
-    marginBottom: '20px', // Add margin to create space
-  }}
-  onClick={() => handleButtonClick('profile')}
->
-  <CgProfile size={20} />
-</button>
-{/* Settings Logout  */}
-<button
-  style={{
-    border: 'none',
-    background: activeButton === 'logout' ? '#333' : 'transparent',
-    color: activeButton === 'logout' ? '#FFF' : '#000',
-    cursor: 'pointer',
-    marginBottom: '20px', // Add margin to create space
-  }}
-  onClick={() => handleButtonClick('logout')}
->
-  <SlLogout size={20} />
-</button>
-</div>
-  </div>
 
+      {/* Profile button */}
+      <div style={{ marginTop: '250px' }}>
+        <button
+          style={{
+            border: 'none',
+            background: activeButton === 'profile' ? '#333' : 'transparent',
+            color: activeButton === 'profile' ? '#FFF' : '#000',
+            cursor: 'pointer',
+            marginBottom: '20px',
+          }}
+          onClick={() => handleButtonClick('profile')}
+        >
+          <Avatar alt={userData?.userName} src={backend_url + "/" + userData?.profilePicPath} />
+        </button>
 
+        {/* Logout button */}
+        <button
+          style={{
+            border: 'none',
+            background: activeButton === 'logout' ? '#333' : 'transparent',
+            color: activeButton === 'logout' ? '#FFF' : '#000',
+            cursor: 'pointer',
+            marginBottom: '20px',
+          }}
+          onClick={() => handleButtonLogoutClick()}
+        >
+          <SlLogout size={20} />
+        </button>
+      </div>
+    </div>
   );
 };
 

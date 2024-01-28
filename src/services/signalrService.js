@@ -1,4 +1,5 @@
 import * as signalR from "@microsoft/signalr";
+import jwtDecode from 'jwt-decode';
 
 const hubConnection = new signalR.HubConnectionBuilder()
   .withUrl("https://localhost:7225/Hubs/ChatHub", {
@@ -8,20 +9,27 @@ const hubConnection = new signalR.HubConnectionBuilder()
   .build();
 console.log(signalR.VERSION);
 
-//start connecion 
 export const startConnection = async () => {
   try {
     await hubConnection.start();
-    console.log("Connection started");
+    // Share the username with the server upon connection
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userIdClaim = 'user_id';
+      const senderUserId = decodedToken[userIdClaim];
+      //setSenderUserId(senderUserId);
+      console.log(senderUserId);
+      await hubConnection.invoke('AddUserConnection', senderUserId);
+    }
   } catch (err) {
     console.log(err);
   }
- 
 };
+
 hubConnection.onclose(async () => {
   await startConnection();
 });
-startConnection();
 
 export const addMessageListener = (callback) => {
   hubConnection.on("ReceiveMessage", (user, message) => {
@@ -29,11 +37,15 @@ export const addMessageListener = (callback) => {
   });
 };
 
-export const sendMessage = async (sender, receiver, message) => {
-  await hubConnection.invoke('SendMessage', sender, receiver, message)
-    .catch((error) => console.error(error));
+// Send message to a specific user
+export const sendMessageToUser = async (receiverUsername, message) => {
+  try {
+    await hubConnection.invoke('SendMessageToUser', receiverUsername, message);
+  } catch (error) {
+    console.error(error);
+    // Handle send message error, if needed
+  }
 };
-
 export const stopConnection = () => {
   if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
     hubConnection.stop();

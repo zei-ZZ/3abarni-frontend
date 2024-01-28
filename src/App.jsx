@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
-import SideBar from "./components/Sidebar";
+import SideBar from "./components/SideBar";
 import ReceiverBar from "./components/ReceiverBar";
 import ParentComponent from "./components/ParentComponent"; 
 import ForgetPassword from "./components/ForgetPassword";
@@ -41,8 +41,8 @@ function App() {
         <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/sidebar" element={<SideBar handleChange={handleChange} onSubmit={onSubmit} />} />
         <Route path="/receiver" element={<ReceiverBar handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/ParentComponent" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/ForgetPassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
+        <Route path="/chat" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
+        <Route path="/forgetpassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
       </Routes>
     </Router>
   );

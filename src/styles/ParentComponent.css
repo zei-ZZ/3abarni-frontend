@@ -1,0 +1,8 @@
+.contacts{
+    margin-left: 70px;
+}
+.chat {
+    display : flex;
+    flex-direction: column;
+}
+

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import UIImage from "../assets/images/pngegg (1).png"; // Import the UI image
-import LogoImage from "../assets/images/logo.png"; // Import the logo image
-import "../styles/SignUpForm.css"; // Import the component-specific CSS file
+import UIImage from "../assets/images/pngegg (1).png"; 
+import LogoImage from "../assets/images/logo.png"; 
+import "../styles/SignUpForm.css";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+
 
 
 const LoginForm = () => {
@@ -11,6 +12,8 @@ const LoginForm = () => {
     Email: "",
     Password: "",
   });
+
+const backend_url = import.meta.env.VITE_BackendURL;
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -25,11 +28,11 @@ const LoginForm = () => {
       console.log("Form submitted:", response.data);
       //const { token } = response.data;
       window.localStorage.setItem('token', response.data);
-      navigate("/ParentComponent");
+      navigate("/chat");
     } catch (err) {
       console.error("error: ", err);
       if (err.response && err.response.status === 401) {
-        navigate("/ForgetPassword");
+        navigate("/forgetpassword");
     }}
   };
 
@@ -37,13 +40,15 @@ const LoginForm = () => {
     <div className="flex h-screen w-screen ">
       {/* left side with form */}
 
+      
+
       <div
         className="flex-shrink-0 w-2/3 bg-light p-8 overflow-y-auto relative"
         style={{ padding: "5rem" }}
       >
         {/* Logo */}
         <img src={LogoImage} alt="Logo" className="mb-8 logo" />
-
+        
         {/* Form container */}
         <div>
           <div className="welcome-text p-4 font-black">

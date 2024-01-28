@@ -13,6 +13,10 @@ import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import PropTypes from 'prop-types';
 
+
+const backend_url = import.meta.env.VITE_BackendURL;
+
+
 const ContactSearch  = ({ onContactSelect }) =>{
     const [searchTerm, setSearchTerm] = useState('');
     const [contacts, setContacts] = useState([]);
@@ -48,14 +52,14 @@ const ContactSearch  = ({ onContactSelect }) =>{
     );
 
     return (
-        <div>
+        <div class="contacts-list">
             <h2 style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontStyle: 'normal',
                 fontWeight: 600,
                 fontSize: '32px',
                 lineHeight: '44px',
-                marginTop: '15px',
+                marginTop: '5px',
                 marginBottom: '25px',
                 marginLeft: '5.5px'
             }}
@@ -107,14 +111,14 @@ const ContactSearch  = ({ onContactSelect }) =>{
                             padding: '15px',
                         }}
                         onClick={() => handleCardClick(contact.id)}
-                    >
+                    > 
                         <Badge
                             overlap="circular"
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             variant="dot"
                             style={{ marginRight: '10px' }}
                         >
-                            <Avatar alt={contact.userName} src={contact.profilePicPath} />
+                            <Avatar alt={contact.userName} src={backend_url+"/"+contact.profilePicPath} />
                         </Badge>
 
                         <div style={{ flex: 1 }}>
