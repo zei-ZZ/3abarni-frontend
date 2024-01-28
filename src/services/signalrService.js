@@ -38,9 +38,9 @@ export const addMessageListener = (callback) => {
 };
 
 // Send message to a specific user
-export const sendMessageToUser = async (receiverUsername, message) => {
+export const sendMessageToUser = async (receiverUsername, senderUsername, message) => {
   try {
-    await hubConnection.invoke('SendMessageToUser', receiverUsername, message);
+    await hubConnection.invoke('SendMessageToUser', receiverUsername, senderUsername, message);
   } catch (error) {
     console.error(error);
     // Handle send message error, if needed
