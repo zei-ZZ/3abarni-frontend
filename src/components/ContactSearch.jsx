@@ -12,11 +12,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   debounceTime,
   switchMap,
-  map,
   scan,
   tap,
-  throttleTime,
   distinctUntilChanged,
+  filter,
+  exhaustMap,
 } from "rxjs/operators";
 import { Subject, fromEvent, merge, from } from "rxjs";
 import { useInView } from "react-intersection-observer";
@@ -25,19 +25,8 @@ import Badge from "@mui/material/Badge";
 import PropTypes from "prop-types";
 
 const backend_url = import.meta.env.VITE_BackendURL;
-const fetchSearchUsers = async (query, page) => {
-  // Fetch contacts based on the query and page
-  try {
-    const res = await axiosInstance.get(`/users/search/${query}/${page}`);
-    return res.data;
-  } catch (err) {
-    console.error(err);
-  }
-};
 
 const ContactSearch = ({ onContactSelect }) => {
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   const handleCardClick = (contactId) => {
     setSelectedContact(contactId === selectedContact ? null : contactId);
@@ -46,17 +35,47 @@ const ContactSearch = ({ onContactSelect }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [contacts, setContacts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
   const inputRef = useRef(null);
+  const scrollableDivRef = useRef(null);
+
+  const fetchSearchUsers = async (query, page) => {
+    console.log(`${query} + ${page}`);
+    if (query == "") return [];
+    // Fetch contacts based on the query and page
+    try {
+      const res = await axiosInstance.get(`/users/search/${query}/${page}`);
+      if (res.data.length == 0) setHasMore(false);
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const [ref, inView, entry] = useInView({
+    onChange: async (inView, entry) => {
+      if (inView) {
+        setPage((prev) => prev + 1);
+        const contactsToAdd = await fetchSearchUsers(query, page);
+        setTimeout(() => {
+          setContacts((prev) => [...prev, ...contactsToAdd]);
+        }, 1000);
+      }
+    },
+  });
+
   useEffect(() => {
     const query$ = fromEvent(inputRef.current, "input").pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      switchMap((e) => fetchSearchUsers(e.target.value, 1))
+      switchMap((e) => fetchSearchUsers(e.target.value, page))
     );
 
     const sub = query$.subscribe({
       next: (res) => {
         console.log(res);
+        setPage(1);
+        setHasMore(true);
         setContacts(res);
       },
       error: (err) => console.error(err),
@@ -165,8 +184,14 @@ const ContactSearch = ({ onContactSelect }) => {
           height: "550px",
         }}
         className=" overflow-auto max-h-full"
+        ref={scrollableDivRef}
       >
         {displayedUsers}
+        <div height="50px"> </div>
+        {hasMore && <h3 height="40px"> loading ...</h3>}
+        {!hasMore && <h3 height="40px"> Oops, no more data </h3>}
+
+        <div ref={ref}></div>
       </div>
     </div>
   );
