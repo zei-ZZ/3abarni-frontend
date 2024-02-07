@@ -1,6 +1,7 @@
 import { IoSettingsOutline } from 'react-icons/io5';
 import { LuUsers2 } from 'react-icons/lu';
 import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
+import { PiGameControllerLight } from "react-icons/pi";
 import LogoImage from '../assets/images/logo.png';
 import { SlLogout } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
@@ -129,7 +130,19 @@ const Sidebar = () => {
       >
         <IoSettingsOutline size={20} />
       </button>
-
+         {/* Game button */}
+      <button
+        style={{
+          border: 'none',
+          background: activeButton === 'game' ? '#333' : 'transparent',
+          color: activeButton === 'game' ? '#FFF' : '#000',
+          cursor: 'pointer',
+          marginBottom: '20px',
+        }}
+        onClick={() => handleButtonClick('game')}
+      >
+        <PiGameControllerLight size={20} />
+      </button>
       {/* Profile button */}
       <div style={{ marginTop: '250px' }}>
         <button

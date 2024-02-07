@@ -46,6 +46,16 @@ export const sendMessageToUser = async (receiverUsername, senderUsername, messag
     // Handle send message error, if needed
   }
 };
+
+export const getConnectedUserIds = async () => {
+  try {
+    const connectedUserIds = await hubConnection.invoke('GetConnectedUserIds');
+    return connectedUserIds;
+  } catch (error) {
+    console.error('Error fetching connected user IDs:', error);
+    return [];
+  }
+};
 export const stopConnection = () => {
   if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
     hubConnection.stop();

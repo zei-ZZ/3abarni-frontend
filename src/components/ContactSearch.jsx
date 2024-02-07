@@ -52,7 +52,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
     );
 
     return (
-        <div class="contacts-list">
+        <div >
             <h2 style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontStyle: 'normal',

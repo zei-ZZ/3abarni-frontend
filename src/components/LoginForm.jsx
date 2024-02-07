@@ -12,13 +12,9 @@ const LoginForm = () => {
     Email: "",
     Password: "",
   });
-
-const backend_url = import.meta.env.VITE_BackendURL;
-
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
-
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();

@@ -53,7 +53,7 @@ const ChatInterface = ({ selectedContact }) => {
     }
   };
 
-  const onEmojiClick = (emojiObject, event) => {
+  const onEmojiClick = (event , emojiObject) => {
     console.log(emojiObject.emoji);
     setMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowEmojiPicker(false);
