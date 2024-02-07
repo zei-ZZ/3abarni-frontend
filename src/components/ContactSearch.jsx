@@ -8,17 +8,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import "../styles/ContactSearch.css";
 import axiosInstance from "../utils/axiosInstance";
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  debounceTime,
-  switchMap,
-  scan,
-  tap,
-  distinctUntilChanged,
-  filter,
-  exhaustMap,
-} from "rxjs/operators";
-import { Subject, fromEvent, merge, from } from "rxjs";
+import { useState, useEffect, useRef } from "react";
+import { debounceTime, switchMap, distinctUntilChanged } from "rxjs/operators";
+import { fromEvent } from "rxjs";
 import { useInView } from "react-intersection-observer";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -55,8 +47,8 @@ const ContactSearch = ({ onContactSelect }) => {
   const [ref, inView, entry] = useInView({
     onChange: async (inView, entry) => {
       if (inView) {
+        const contactsToAdd = await fetchSearchUsers(query, page + 1);
         setPage((prev) => prev + 1);
-        const contactsToAdd = await fetchSearchUsers(query, page);
         setTimeout(() => {
           setContacts((prev) => [...prev, ...contactsToAdd]);
         }, 1000);
