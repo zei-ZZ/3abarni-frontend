@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { startConnection, addMessageListener, sendMessageToUser, stopConnection } from '../services/signalrService';
+import { startConnection, addMessageListener, sendMessageToUser, stopConnection, getChatHistory} from '../services/signalrService';
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoIosSend } from "react-icons/io";
 import { IoIosLink } from "react-icons/io";
@@ -25,10 +25,11 @@ const ChatInterface = ({ selectedContact }) => {
       setSenderUserId(senderUserId);
     }
 
-    addMessageListener((messageData) => {
-      console.log('Received message:', messageData);
-      //setMessages(() => [messageData]); this solves the duplicated received message but the previous received message is no longer displayed after we receive a new message
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+    
+
+    // Handle receiving chat history and real-time messages
+    addMessageListener((data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
@@ -52,6 +53,21 @@ const ChatInterface = ({ selectedContact }) => {
       console.error('Error sending message:', error);
     }
   };
+  
+  if (selectedContact) {
+    console.log("d5alt");
+    // Fetch chat history when a contact is selected
+    getChatHistory(senderUserId, selectedContact)
+      .then(chatHistory => {
+        if (chatHistory) {
+          console.log("waa",chatHistory);
+          //setMessages(chatHistory);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching chat history:', error);
+      });
+  }
 
   const onEmojiClick = (emojiObject, event) => {
     console.log(emojiObject.emoji);

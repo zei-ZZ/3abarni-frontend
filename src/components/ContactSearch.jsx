@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import PropTypes from 'prop-types';
+import { getChatHistory } from '../services/signalrService';
 
 
 const backend_url = import.meta.env.VITE_BackendURL;
@@ -44,7 +45,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
     const handleCardClick = (contactId) => {
         setSelectedContact(contactId === selectedContact ? null : contactId);
         onContactSelect(contactId);
-   
+        
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -52,7 +53,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
     );
 
     return (
-        <div class="contacts-list">
+        <div className="contacts-list">
             <h2 style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontStyle: 'normal',
