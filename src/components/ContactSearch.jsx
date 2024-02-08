@@ -39,8 +39,10 @@ const ContactSearch = ({ onContactSelect }) => {
       const decodedToken = jwtDecode(item);
       const userIdClaim = "user_id";
       const senderUserId = decodedToken[userIdClaim];
-
       setUserId(senderUserId);
+      fetchSearchUsers("", senderUserId, 1).then((res) => {
+        setContacts(res);
+      });
     }
   }, []);
 
@@ -98,7 +100,7 @@ const ContactSearch = ({ onContactSelect }) => {
     });
     return () => sub.unsubscribe();
   }, [userId]);
-  console.log(userId);
+
   const displayedUsers = contacts.map((contact) => (
     <div
       key={contact.id}
