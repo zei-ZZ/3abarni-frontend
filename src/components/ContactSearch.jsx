@@ -15,7 +15,7 @@ import { useInView } from "react-intersection-observer";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import PropTypes from "prop-types";
-
+import jwtDecode from "jwt-decode";
 const backend_url = import.meta.env.VITE_BackendURL;
 
 const ContactSearch = ({ onContactSelect }) => {
@@ -30,24 +30,48 @@ const ContactSearch = ({ onContactSelect }) => {
   const [hasMore, setHasMore] = useState(true);
   const inputRef = useRef(null);
   const scrollableDivRef = useRef(null);
+  const [userId, setUserId] = useState("");
 
-  const fetchSearchUsers = async (query, page) => {
+  useEffect(() => {
+    const item = localStorage.getItem("token");
+
+    if (item) {
+      const decodedToken = jwtDecode(item);
+      const userIdClaim = "user_id";
+      const senderUserId = decodedToken[userIdClaim];
+
+      setUserId(senderUserId);
+    }
+  }, []);
+
+  const fetchSearchUsers = async (query, userId, page) => {
     console.log(`${query} + ${page}`);
-    if (query == "") return [];
+    console.log(userId);
+    if (query.trim() == "") {
+      try {
+        const res = await axiosInstance.get(`/contacts/${userId}/${page}`);
+        if (res.data.length == 0) setHasMore(false);
+        return res.data || [];
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
+    }
     // Fetch contacts based on the query and page
     try {
       const res = await axiosInstance.get(`/users/search/${query}/${page}`);
       if (res.data.length == 0) setHasMore(false);
-      return res.data;
+      return res.data || [];
     } catch (err) {
       console.error(err);
     }
+    return [];
   };
 
   const [ref, inView, entry] = useInView({
     onChange: async (inView, entry) => {
       if (inView) {
-        const contactsToAdd = await fetchSearchUsers(query, page + 1);
+        const contactsToAdd = await fetchSearchUsers(query, userId, page + 1);
         setPage((prev) => prev + 1);
         setTimeout(() => {
           setContacts((prev) => [...prev, ...contactsToAdd]);
@@ -60,7 +84,7 @@ const ContactSearch = ({ onContactSelect }) => {
     const query$ = fromEvent(inputRef.current, "input").pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      switchMap((e) => fetchSearchUsers(e.target.value, page))
+      switchMap((e) => fetchSearchUsers(e.target.value, userId, page))
     );
 
     const sub = query$.subscribe({
@@ -73,8 +97,8 @@ const ContactSearch = ({ onContactSelect }) => {
       error: (err) => console.error(err),
     });
     return () => sub.unsubscribe();
-  }, []);
-
+  }, [userId]);
+  console.log(userId);
   const displayedUsers = contacts.map((contact) => (
     <div
       key={contact.id}
@@ -108,14 +132,12 @@ const ContactSearch = ({ onContactSelect }) => {
           {contact.userName}
         </div>
         <div style={{ fontSize: "14px", color: "#555" }}>
-          {contact.lastMessage}
-          hello dude!
+          {contact.lastMessageSent}
         </div>
       </div>
 
       <div style={{ marginLeft: "10px", fontSize: "12px" }}>
-        {contact.lastMessageTime}
-        9:35
+        {new Date(contact.lastMessageSentAt).toLocaleTimeString()}
       </div>
     </div>
   ));
