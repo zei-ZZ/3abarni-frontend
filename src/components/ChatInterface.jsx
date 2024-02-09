@@ -55,12 +55,8 @@ const ChatInterface = ({ selectedContact, chatHistory }) => {
 
   const handleSendMessage = async () => {
     try {
-      console.log("selectedContact", selectedContact);
-      console.log("senderUserId", senderUserId);
       if (message.trim() !== '' && selectedContact) {
-        // Use the selectedContact as the receiver
         await sendMessageToUser(selectedContact, senderUserId, message);
-        // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
         setMessage('');
       }

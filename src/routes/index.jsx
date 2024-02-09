@@ -22,7 +22,9 @@ const ForgetPassword = Loadable(lazy(() => import("../components/ForgetPassword"
 const Profile = Loadable(lazy(() => import("../components/Profile")));
 const Settings = Loadable(lazy(() => import("../components/Settings")));
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
+const PacmanGame = Loadable(lazy(() => import("../components/PacmanGame")));
 
+       
 
 // Define DEFAULT_PATH
 const DEFAULT_PATH = "http://localhost:5173/"; // Default path for logged-in users
@@ -34,6 +36,7 @@ export default function Router() {
     { path: "/forgetpassword", element: <ForgetPassword /> },
     { path: "/profile", element: <Profile /> },
     { path: "/settings", element: <Settings /> },
+    { path: "/game", element: <PacmanGame /> },
     // Default route for logged-in users
     {
       path: "/chat",

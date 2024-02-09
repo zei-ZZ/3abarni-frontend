@@ -12,9 +12,11 @@ import { debounceTime, switchMap, distinctUntilChanged } from "rxjs/operators";
 import { fromEvent } from "rxjs";
 import { useInView } from "react-intersection-observer";
 import Avatar from "@mui/material/Avatar";
+import ConnectedUsers  from "./ConnectedUsers";
 import Badge from "@mui/material/Badge";
 import PropTypes from "prop-types";
 import jwtDecode from "jwt-decode";
+import { startConnection, stopConnection } from '../services/signalrService';
 const backend_url = import.meta.env.VITE_BackendURL;
 
 const ContactSearch = ({ onContactSelect }) => {
@@ -27,8 +29,10 @@ const ContactSearch = ({ onContactSelect }) => {
   const scrollableDivRef = useRef(null);
   const [senderUserId, setSenderUserId] = useState("");
   const [chatHistory, setChatHistory] = useState(null);
+  const [connectedUserIds, setConnectedUserIds] = useState([]);
 
   useEffect(() => {
+    startConnection(setConnectedUserIds);
     const item = localStorage.getItem("token");
 
     if (item) {
@@ -39,6 +43,9 @@ const ContactSearch = ({ onContactSelect }) => {
       fetchSearchUsers("", u, 1).then((res) => {
         setContacts(res);
       });
+    }
+    return () => {
+      stopConnection();
     }
   }, []);
 
@@ -170,6 +177,7 @@ const ContactSearch = ({ onContactSelect }) => {
       >
         Chats
       </h2>
+      <ConnectedUsers connectedUserIds={connectedUserIds}/>
       <Paper
         component="form"
         sx={{

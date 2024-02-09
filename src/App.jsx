@@ -1,13 +1,13 @@
 // App.jsx
-//import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios";
-import { useState } from "react";
 import "./App.css";
 import RouterComponent from "./routes/index";
 
 function App() {
   const [form, setForm] = useState({});
+
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -29,10 +29,12 @@ function App() {
     });
   };
 
+
+
   return (
     <Router>
-    <RouterComponent />
-  </Router>
+      <RouterComponent />
+    </Router>
   );
 }
 
