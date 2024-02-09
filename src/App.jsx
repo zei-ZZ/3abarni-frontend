@@ -2,19 +2,13 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios";
-import LoginForm from "./components/LoginForm";
-import SignUpForm from "./components/SignUpForm";
-import SideBar from "./components/SideBar";
-import ReceiverBar from "./components/ReceiverBar";
-import ParentComponent from "./components/ParentComponent"; 
-import ForgetPassword from "./components/ForgetPassword";
-import  PacmanGame  from "./components/PacmanGame"; // Imported Pacman component
+import { useState } from "react";
 import "./App.css";
-import ChatInterface from './components/ChatInterface';
+import RouterComponent from "./routes/index";
 
 function App() {
   const [form, setForm] = useState({});
- 
+
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -36,20 +30,11 @@ function App() {
     });
   };
 
-  
+
 
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<LoginForm handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/sidebar" element={<SideBar handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/receiver" element={<ReceiverBar handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/chat" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/game" element={<PacmanGame />} /> {/* Added route for the game page */}
-        <Route path="/test" element={<ChatInterface selectedContact={"ef16797c-2f24-4b52-b494-11c47e10745b"} handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/forgetpassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
-      </Routes>
+      <RouterComponent />
     </Router>
   );
 }

@@ -48,25 +48,14 @@ export const getConnectedUserIds = async () => {
 hubConnection.onclose(async () => {
   await startConnection(setConnectedUserIds);
 });
-export const sendFileToUser = async (receiverUsername, senderUsername, fileName) => {
-  try {
-    await hubConnection.invoke('SendFileToUser', receiverUsername, senderUsername, fileName);
-  } catch (error) {
-    console.error('Error sending file:', error);
-    throw error; // Rethrow the error to propagate it to the caller
-  }
-};
 
 
+
+
+// Handle receiving chat history and real-time messages
 export const addMessageListener = (callback) => {
   hubConnection.on("ReceiveMessage", (user, message) => {
     callback({ user, message });
-  });
-};
-// Function to add a listener for incoming file messages
-export const addFileListener = (callback) => {
-  hubConnection.on("ReceiveFile", (senderUsername, fileName) => {
-    callback({ senderUsername, fileName });
   });
 };
 

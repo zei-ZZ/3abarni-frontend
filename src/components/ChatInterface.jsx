@@ -8,11 +8,11 @@ import { IoIosLink } from "react-icons/io";
 import Picker from 'emoji-picker-react';
 import "../styles/ChatInterface.css";
 
-const ChatInterface = ({ selectedContact }) => {
+const ChatInterface = ({ selectedContact, chatHistory }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [senderUserId, setSenderUserId] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State for emoji picker visibility
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     startConnection();
@@ -25,15 +25,33 @@ const ChatInterface = ({ selectedContact }) => {
       setSenderUserId(senderUserId);
     }
 
-    addMessageListener((messageData) => {
-      console.log('Received message:', messageData);
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+    addMessageListener((data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
       stopConnection();
     };
   }, []);
+
+  // Function to categorize messages as sent or received
+  const categorizeMessages = (history) => {
+    return history.map(message => ({
+      message: message.content,
+      user: message.userId === senderUserId ? senderUserId : selectedContact
+    }));
+  };
+
+  // Categorized messages based on chat history
+  const categorizedMessages = categorizeMessages(chatHistory);
+
+  useEffect(() => {
+    if (chatHistory) {
+      // Merge chat history messages with real-time messages
+      const categorizedChatHistory = categorizeMessages(chatHistory);
+      setMessages(prevMessages => [...prevMessages, ...categorizedChatHistory]);
+    }
+  }, [chatHistory]);
 
   const handleSendMessage = async () => {
     try {
@@ -46,6 +64,12 @@ const ChatInterface = ({ selectedContact }) => {
       console.error('Error sending message:', error);
     }
   };
+
+  // Scroll to the bottom of the message container
+  /*useEffect(() => {
+    const messageContainer = document.getElementById('messages');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }, [messages]);*/
 
   const onEmojiClick = (emojiObject, event) => {
     setMessage((prevInput) => prevInput + emojiObject.emoji);
@@ -72,7 +96,7 @@ const ChatInterface = ({ selectedContact }) => {
       </div>
 
       {/* Message input and send button */}
-      <div id="box" className="p-4 bg-white flex items-center w-full fixed bottom-0" style={{ padding: '10px', width: '48%' }}>
+      <div id="box" className="p-4 bg-white flex items-center w-full bottom-0" style={{ padding: '10px', width: '100%' }}>
         {/* Attachments icon */}
         <div className="p-1">
           <button className="text-black">
@@ -116,6 +140,7 @@ const ChatInterface = ({ selectedContact }) => {
 
 ChatInterface.propTypes = {
   selectedContact: PropTypes.string,
+  chatHistory: PropTypes.array.isRequired,
 };
 
 export default ChatInterface;
