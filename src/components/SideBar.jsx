@@ -45,6 +45,8 @@ const Sidebar = () => {
 
   const handleButtonLogoutClick = () => {
     setActiveButton(null); // Clear the active button on logout
+    localStorage.removeItem('token');
+    navigate("/login");
   };
 
   return (
