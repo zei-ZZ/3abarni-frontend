@@ -1,29 +1,30 @@
-//import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-//import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-//import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
-import "../styles/ContactSearch.css";
+import ConnectedUsers from './ConnectedUsers'; // Import the ConnectedUsers component
 import axiosInstance from "../utils/axiosInstance";
-import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import PropTypes from 'prop-types';
-
+import "../styles/ContactSearch.css";
+import { startConnection,  stopConnection } from '../services/signalrService';
 
 const backend_url = import.meta.env.VITE_BackendURL;
 
-
-const ContactSearch  = ({ onContactSelect }) =>{
+const ContactSearch = ({ onContactSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [contacts, setContacts] = useState([]);
-    
     const [selectedContact, setSelectedContact] = useState(null);
+    const [connectedUserIds, setConnectedUserIds] = useState([]);
 
     useEffect(() => {
+        // Start SignalR connection
+        startConnection(setConnectedUserIds);
+
+        // Fetch contacts
         axiosInstance
             .get('/users')
             .then((response) => {
@@ -33,9 +34,12 @@ const ContactSearch  = ({ onContactSelect }) =>{
             .catch((error) => {
                 console.error('Error fetching users:', error);
             });
-    }, []);
 
-   
+        return () => {
+            // Clean up SignalR connection
+            stopConnection();
+        };
+    }, []);
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -44,7 +48,6 @@ const ContactSearch  = ({ onContactSelect }) =>{
     const handleCardClick = (contactId) => {
         setSelectedContact(contactId === selectedContact ? null : contactId);
         onContactSelect(contactId);
-   
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -52,7 +55,7 @@ const ContactSearch  = ({ onContactSelect }) =>{
     );
 
     return (
-        <div >
+        <div className="contacts-list">
             <h2 style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontStyle: 'normal',
@@ -62,8 +65,9 @@ const ContactSearch  = ({ onContactSelect }) =>{
                 marginTop: '5px',
                 marginBottom: '25px',
                 marginLeft: '5.5px'
-            }}
-            >Chats</h2>
+            }}>Chats</h2>
+            {/* Render ConnectedUsers component with connectedUserIds */}
+            <ConnectedUsers connectedUserIds={connectedUserIds} />
             <Paper
                 component="form"
                 sx={{
@@ -72,7 +76,6 @@ const ContactSearch  = ({ onContactSelect }) =>{
                     marginBottom: '10px',
                 }}
             >
-
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                     <SearchIcon sx={{ color: '#B0B0B0' }} />
                 </IconButton>
@@ -140,9 +143,10 @@ const ContactSearch  = ({ onContactSelect }) =>{
             </div>
         </div>
     );
-}
+};
 
 ContactSearch.propTypes = {
     onContactSelect: PropTypes.func.isRequired,
 };
+
 export default ContactSearch;

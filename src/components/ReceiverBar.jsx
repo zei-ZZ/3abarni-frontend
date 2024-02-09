@@ -1,4 +1,3 @@
-import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Avatar from '@mui/material/Avatar';
@@ -35,7 +34,7 @@ const ReceiverBar = ({ selectedContact }) => {
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'black' }}>
             {userData?.userName}
           </div>
-          <div style={{ fontSize: '14px', color: 'green', color: 'black' }}>
+          <div style={{ fontSize: '14px', color: 'black' }}>
             Online
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import UIImage from "../assets/images/UI.png"; 
-import LogoImage from "../assets/images/logo.png"; 
-import axiosInstance from "../utils/axiosInstance";
+//import UIImage from "../assets/images/UI.png"; 
+//import LogoImage from "../assets/images/logo.png"; 
 import { useNavigate } from 'react-router-dom';
 import "../styles/ForgetPassword.css"; 
 import ImageA from "../assets/images/pngegg copie 2.png"
@@ -16,20 +15,6 @@ const ForgetPassword = () => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
   const navigate = useNavigate();
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Add your form submission logic here
-    try {
-      const response = await axiosInstance.post("/Auth/recoverAccount", form, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log("Form submitted:", response.data);
-    } catch (err) {
-      console.error("error: ", err);
-    }
-  };
 
   return (
 
@@ -68,7 +53,7 @@ const ForgetPassword = () => {
                  </label>
                     <input
                             type="text" id="email" name="email" value={form.email} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="john.doe@example.com" required />
-                <div class="grid grid-cols-2 divide-x-0">
+                <div className="grid grid-cols-2 divide-x-0">
                     <div>
                     <button
                         type="submit"
