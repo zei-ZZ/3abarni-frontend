@@ -31,6 +31,8 @@ hubConnection.onclose(async () => {
   await startConnection();
 });
 
+
+// Handle receiving chat history and real-time messages
 export const addMessageListener = (callback) => {
   hubConnection.on("ReceiveMessage", (user, message) => {
     callback({ user, message });
@@ -43,9 +45,20 @@ export const sendMessageToUser = async (receiverUsername, senderUsername, messag
     await hubConnection.invoke('SendMessageToUser', receiverUsername, senderUsername, message);
   } catch (error) {
     console.error(error);
-    // Handle send message error, if needed
   }
 };
+
+
+/*export const getChatHistory = async (senderUsername, receiverUsername) => {
+  try {
+    const chatHistory = await hubConnection.invoke('GetChatHistory', senderUsername, receiverUsername);
+    console.log("done",chatHistory);
+    return chatHistory;
+  } catch (error) {
+    console.error(error);
+  }
+};*/
+
 export const stopConnection = () => {
   if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {
     hubConnection.stop();

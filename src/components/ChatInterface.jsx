@@ -8,11 +8,11 @@ import { IoIosLink } from "react-icons/io";
 import Picker from 'emoji-picker-react';
 import "../styles/ChatInterface.css";
 
-const ChatInterface = ({ selectedContact }) => {
+const ChatInterface = ({ selectedContact, chatHistory }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [senderUserId, setSenderUserId] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State for emoji picker visibility
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     startConnection();
@@ -25,16 +25,33 @@ const ChatInterface = ({ selectedContact }) => {
       setSenderUserId(senderUserId);
     }
 
-    addMessageListener((messageData) => {
-      console.log('Received message:', messageData);
-      //setMessages(() => [messageData]); this solves the duplicated received message but the previous received message is no longer displayed after we receive a new message
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+    addMessageListener((data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
       stopConnection();
     };
   }, []);
+
+  // Function to categorize messages as sent or received
+  const categorizeMessages = (history) => {
+    return history.map(message => ({
+      message: message.content,
+      user: message.userId === senderUserId ? senderUserId : selectedContact
+    }));
+  };
+
+  // Categorized messages based on chat history
+  const categorizedMessages = categorizeMessages(chatHistory);
+
+  useEffect(() => {
+    if (chatHistory) {
+      // Merge chat history messages with real-time messages
+      const categorizedChatHistory = categorizeMessages(chatHistory);
+      setMessages(prevMessages => [...prevMessages, ...categorizedChatHistory]);
+    }
+  }, [chatHistory]);
 
   const handleSendMessage = async () => {
     try {
@@ -45,7 +62,6 @@ const ChatInterface = ({ selectedContact }) => {
         await sendMessageToUser(selectedContact, senderUserId, message);
         // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
-        console.log(message);
         setMessage('');
       }
     } catch (error) {
@@ -53,8 +69,13 @@ const ChatInterface = ({ selectedContact }) => {
     }
   };
 
+  // Scroll to the bottom of the message container
+  /*useEffect(() => {
+    const messageContainer = document.getElementById('messages');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }, [messages]);*/
+
   const onEmojiClick = (emojiObject, event) => {
-    console.log(emojiObject.emoji);
     setMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowEmojiPicker(false);
   };
@@ -123,6 +144,7 @@ const ChatInterface = ({ selectedContact }) => {
 
 ChatInterface.propTypes = {
   selectedContact: PropTypes.string,
+  chatHistory: PropTypes.array.isRequired,
 };
 
 export default ChatInterface;

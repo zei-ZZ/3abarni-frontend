@@ -111,7 +111,7 @@ const Sidebar = () => {
           cursor: 'pointer',
           marginBottom: '20px',
         }}
-        onClick={() => handleButtonClick('groups')}
+        onClick={() => handleButtonClick('chat')}
       >
         <LuUsers2 size={20} />
       </button>

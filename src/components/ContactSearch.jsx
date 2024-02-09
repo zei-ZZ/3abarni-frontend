@@ -1,6 +1,5 @@
-//import * as React from 'react';
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
 //import Divider from '@mui/material/Divider';
 import IconButton from "@mui/material/IconButton";
 //import MenuIcon from '@mui/icons-material/Menu';
@@ -20,17 +19,14 @@ const backend_url = import.meta.env.VITE_BackendURL;
 
 const ContactSearch = ({ onContactSelect }) => {
   const [selectedContact, setSelectedContact] = useState(null);
-  const handleCardClick = (contactId) => {
-    setSelectedContact(contactId === selectedContact ? null : contactId);
-    onContactSelect(contactId);
-  };
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [contacts, setContacts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const inputRef = useRef(null);
   const scrollableDivRef = useRef(null);
-  const [userId, setUserId] = useState("");
+  const [senderUserId, setSenderUserId] = useState("");
+  const [chatHistory, setChatHistory] = useState(null);
 
   useEffect(() => {
     const item = localStorage.getItem("token");
@@ -38,9 +34,9 @@ const ContactSearch = ({ onContactSelect }) => {
     if (item) {
       const decodedToken = jwtDecode(item);
       const userIdClaim = "user_id";
-      const senderUserId = decodedToken[userIdClaim];
-      setUserId(senderUserId);
-      fetchSearchUsers("", senderUserId, 1).then((res) => {
+      const u = decodedToken[userIdClaim];
+      setSenderUserId(u);
+      fetchSearchUsers("", u, 1).then((res) => {
         setContacts(res);
       });
     }
@@ -73,7 +69,7 @@ const ContactSearch = ({ onContactSelect }) => {
   const [ref, inView, entry] = useInView({
     onChange: async (inView, entry) => {
       if (inView) {
-        const contactsToAdd = await fetchSearchUsers(query, userId, page + 1);
+        const contactsToAdd = await fetchSearchUsers(query, senderUserId, page + 1);
         setPage((prev) => prev + 1);
         setTimeout(() => {
           setContacts((prev) => [...prev, ...contactsToAdd]);
@@ -82,11 +78,26 @@ const ContactSearch = ({ onContactSelect }) => {
     },
   });
 
+  const handleCardClick = async (contactId) => {
+    try {
+        console.log("senderUserId", senderUserId);
+        console.log("receiverId", contactId);
+        const chatHistoryResponse = await axiosInstance.get(`/chats/messages/sender/${senderUserId}/receiver/${contactId}`);
+        const chatHistory = chatHistoryResponse.data;
+        console.log("history", chatHistory);
+        setSelectedContact(contactId === selectedContact ? null : contactId);
+        setChatHistory(chatHistory);
+        onContactSelect(contactId, chatHistory);
+    } catch (error) {
+        console.error('Error fetching chat history:', error);
+    }
+};
+
   useEffect(() => {
     const query$ = fromEvent(inputRef.current, "input").pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      switchMap((e) => fetchSearchUsers(e.target.value, userId, page))
+      switchMap((e) => fetchSearchUsers(e.target.value, senderUserId, page))
     );
 
     const sub = query$.subscribe({
@@ -99,7 +110,7 @@ const ContactSearch = ({ onContactSelect }) => {
       error: (err) => console.error(err),
     });
     return () => sub.unsubscribe();
-  }, [userId]);
+  }, [senderUserId]);
 
   const displayedUsers = contacts.map((contact) => (
     <div
@@ -204,8 +215,6 @@ const ContactSearch = ({ onContactSelect }) => {
       >
         {displayedUsers}
         <div height="50px"> </div>
-        {hasMore && <h3 height="40px"> loading ...</h3>}
-        {!hasMore && <h3 height="40px"> Oops, no more data </h3>}
 
         <div ref={ref}></div>
       </div>
