@@ -4,7 +4,7 @@ import ContactSearch from './ContactSearch';
 import ChatInterface from './ChatInterface'; 
 import MediaFiles from './MediaFiles';
 import ReceiverBar from './ReceiverBar';
-import noContactImage from '../assets/images/logo.png';  // Import your alternative image
+import noContactImage from '../assets/images/no-chat.png';  // Import your alternative image
 import "../styles/ParentComponent.css"; 
 import jwtDecode from 'jwt-decode';
 import axiosInstance from "../utils/axiosInstance";
@@ -62,7 +62,7 @@ const ParentComponent = () => {
                 <div className="alternative-content">
                     {/* Make the image smaller and center it using flexbox */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                        <img src={noContactImage} alt="No contact selected" style={{ width: '18%' }} />
+                        <img src={noContactImage} alt="No contact selected" style={{ width: '45%' }} />
                         <p style={{ fontSize: '14px' }}>No contact selected</p>
                     </div>
                 </div>

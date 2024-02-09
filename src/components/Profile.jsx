@@ -1,4 +1,3 @@
-// Import necessary React and Material-UI components
 import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
@@ -7,12 +6,8 @@ import Paper from '@mui/material/Paper';
 import jwtDecode from 'jwt-decode';
 import axiosInstance from "../utils/axiosInstance";
 import SideBar from './SideBar';
-import ContactSearch from './ContactSearch';
-import ChatInterface from './ChatInterface';
-import MediaFiles from './MediaFiles';
 
 
-// Sample data to represent user information
 const user = {
     id: 1,
     name: 'John Doe',
@@ -20,7 +15,7 @@ const user = {
     avatarUrl: 'https://example.com/avatar.jpg',
 };
 
-// Profile component
+
 const Profile = () => {
     const [name, setName] = useState(user.name);
     const [description, setDescription] = useState(user.description);

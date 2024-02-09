@@ -125,7 +125,7 @@ const Sidebar = () => {
           cursor: 'pointer',
           marginBottom: '20px',
         }}
-        onClick={() => handleButtonClick('chat')}
+        onClick={() => handleButtonClick('settings')}
       >
         <IoSettingsOutline size={20} />
       </button>
