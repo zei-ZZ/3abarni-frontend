@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from "axios";
-import { useState } from "react";
 import "./App.css";
 import RouterComponent from "./routes/index";
 
