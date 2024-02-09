@@ -25,7 +25,7 @@ const ContactSearch = ({ onContactSelect }) => {
   const [hasMore, setHasMore] = useState(true);
   const inputRef = useRef(null);
   const scrollableDivRef = useRef(null);
-  const [userId, setUserId] = useState("");
+  const [senderUserId, setSenderUserId] = useState("");
   const [chatHistory, setChatHistory] = useState(null);
 
   useEffect(() => {
@@ -34,9 +34,9 @@ const ContactSearch = ({ onContactSelect }) => {
     if (item) {
       const decodedToken = jwtDecode(item);
       const userIdClaim = "user_id";
-      const senderUserId = decodedToken[userIdClaim];
-      setUserId(senderUserId);
-      fetchSearchUsers("", senderUserId, 1).then((res) => {
+      const u = decodedToken[userIdClaim];
+      setSenderUserId(u);
+      fetchSearchUsers("", u, 1).then((res) => {
         setContacts(res);
       });
     }
@@ -69,7 +69,7 @@ const ContactSearch = ({ onContactSelect }) => {
   const [ref, inView, entry] = useInView({
     onChange: async (inView, entry) => {
       if (inView) {
-        const contactsToAdd = await fetchSearchUsers(query, userId, page + 1);
+        const contactsToAdd = await fetchSearchUsers(query, senderUserId, page + 1);
         setPage((prev) => prev + 1);
         setTimeout(() => {
           setContacts((prev) => [...prev, ...contactsToAdd]);
@@ -97,7 +97,7 @@ const ContactSearch = ({ onContactSelect }) => {
     const query$ = fromEvent(inputRef.current, "input").pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      switchMap((e) => fetchSearchUsers(e.target.value, userId, page))
+      switchMap((e) => fetchSearchUsers(e.target.value, senderUserId, page))
     );
 
     const sub = query$.subscribe({
@@ -110,7 +110,7 @@ const ContactSearch = ({ onContactSelect }) => {
       error: (err) => console.error(err),
     });
     return () => sub.unsubscribe();
-  }, [userId]);
+  }, [senderUserId]);
 
   const displayedUsers = contacts.map((contact) => (
     <div
