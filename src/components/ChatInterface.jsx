@@ -1,18 +1,18 @@
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { startConnection, addMessageListener, sendMessageToUser, stopConnection, getChatHistory} from '../services/signalrService';
+import { startConnection, addMessageListener, sendMessageToUser, stopConnection } from '../services/signalrService';
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoIosSend } from "react-icons/io";
 import { IoIosLink } from "react-icons/io";
 import Picker from 'emoji-picker-react';
 import "../styles/ChatInterface.css";
 
-const ChatInterface = ({ selectedContact }) => {
+const ChatInterface = ({ selectedContact, chatHistory }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [senderUserId, setSenderUserId] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State for emoji picker visibility
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     startConnection();
@@ -25,9 +25,6 @@ const ChatInterface = ({ selectedContact }) => {
       setSenderUserId(senderUserId);
     }
 
-    
-
-    // Handle receiving chat history and real-time messages
     addMessageListener((data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
@@ -36,6 +33,25 @@ const ChatInterface = ({ selectedContact }) => {
       stopConnection();
     };
   }, []);
+
+  // Function to categorize messages as sent or received
+  const categorizeMessages = (history) => {
+    return history.map(message => ({
+      message: message.content,
+      user: message.userId === senderUserId ? senderUserId : selectedContact
+    }));
+  };
+
+  // Categorized messages based on chat history
+  const categorizedMessages = categorizeMessages(chatHistory);
+
+  useEffect(() => {
+    if (chatHistory) {
+      // Merge chat history messages with real-time messages
+      const categorizedChatHistory = categorizeMessages(chatHistory);
+      setMessages(prevMessages => [...prevMessages, ...categorizedChatHistory]);
+    }
+  }, [chatHistory]);
 
   const handleSendMessage = async () => {
     try {
@@ -46,31 +62,20 @@ const ChatInterface = ({ selectedContact }) => {
         await sendMessageToUser(selectedContact, senderUserId, message);
         // Display the sent message in the chat interface
         setMessages((prevMessages) => [...prevMessages, { user: senderUserId, message }]);
-        console.log(message);
         setMessage('');
       }
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
-  
-  if (selectedContact) {
-    console.log("d5alt");
-    // Fetch chat history when a contact is selected
-    getChatHistory(senderUserId, selectedContact)
-      .then(chatHistory => {
-        if (chatHistory) {
-          console.log("waa",chatHistory);
-          //setMessages(chatHistory);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching chat history:', error);
-      });
-  }
+
+  // Scroll to the bottom of the message container
+  /*useEffect(() => {
+    const messageContainer = document.getElementById('messages');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }, [messages]);*/
 
   const onEmojiClick = (emojiObject, event) => {
-    console.log(emojiObject.emoji);
     setMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowEmojiPicker(false);
   };
@@ -139,6 +144,7 @@ const ChatInterface = ({ selectedContact }) => {
 
 ChatInterface.propTypes = {
   selectedContact: PropTypes.string,
+  chatHistory: PropTypes.array.isRequired,
 };
 
 export default ChatInterface;

@@ -48,17 +48,16 @@ export const sendMessageToUser = async (receiverUsername, senderUsername, messag
   }
 };
 
-// Send message to a specific user
-export const getChatHistory = async (senderUsername, receiverUsername) => {
+
+/*export const getChatHistory = async (senderUsername, receiverUsername) => {
   try {
     const chatHistory = await hubConnection.invoke('GetChatHistory', senderUsername, receiverUsername);
-    console.log(chatHistory);
+    console.log("done",chatHistory);
     return chatHistory;
   } catch (error) {
     console.error(error);
-    // Handle send message error, if needed
   }
-};
+};*/
 
 export const stopConnection = () => {
   if (hubConnection && hubConnection.state === signalR.HubConnectionState.Connected) {

@@ -1,4 +1,3 @@
-//import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 //import Divider from '@mui/material/Divider';
@@ -12,19 +11,29 @@ import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import PropTypes from 'prop-types';
-import { getChatHistory } from '../services/signalrService';
+import jwtDecode from 'jwt-decode';
 
 
 const backend_url = import.meta.env.VITE_BackendURL;
 
 
-const ContactSearch  = ({ onContactSelect }) =>{
+const ContactSearch = ({ onContactSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [contacts, setContacts] = useState([]);
-    
+    const [senderUserId, setSenderUserId] = useState(null);
+
     const [selectedContact, setSelectedContact] = useState(null);
+    const [chatHistory, setChatHistory] = useState(null);
 
     useEffect(() => {
+        const token = window.localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const userIdClaim = 'user_id';
+            const senderUserId = decodedToken[userIdClaim];
+            setSenderUserId(senderUserId);
+            //console.log("waaa sa7bi",senderUserId);
+        }
         axiosInstance
             .get('/users')
             .then((response) => {
@@ -36,16 +45,25 @@ const ContactSearch  = ({ onContactSelect }) =>{
             });
     }, []);
 
-   
+
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const handleCardClick = (contactId) => {
-        setSelectedContact(contactId === selectedContact ? null : contactId);
-        onContactSelect(contactId);
-        
+    const handleCardClick = async (contactId) => {
+        try {
+            console.log("senderUserId", senderUserId);
+            console.log("receiverId", contactId);
+            const chatHistoryResponse = await axiosInstance.get(`/chats/messages/sender/${senderUserId}/receiver/${contactId}`);
+            const chatHistory = chatHistoryResponse.data;
+            console.log("history", chatHistory);
+            setSelectedContact(contactId === selectedContact ? null : contactId);
+            setChatHistory(chatHistory);
+            onContactSelect(contactId, chatHistory);
+        } catch (error) {
+            console.error('Error fetching chat history:', error);
+        }
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -112,14 +130,14 @@ const ContactSearch  = ({ onContactSelect }) =>{
                             padding: '15px',
                         }}
                         onClick={() => handleCardClick(contact.id)}
-                    > 
+                    >
                         <Badge
                             overlap="circular"
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             variant="dot"
                             style={{ marginRight: '10px' }}
                         >
-                            <Avatar alt={contact.userName} src={backend_url+"/"+contact.profilePicPath} />
+                            <Avatar alt={contact.userName} src={backend_url + "/" + contact.profilePicPath} />
                         </Badge>
 
                         <div style={{ flex: 1 }}>
