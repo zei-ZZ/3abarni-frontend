@@ -1,9 +1,10 @@
 import { useState } from "react";
-import UIImage from "../assets/images/pngegg (1).png"; 
-import LogoImage from "../assets/images/logo.png"; 
+import UIImage from "../assets/images/pngegg (1).png";
+import LogoImage from "../assets/images/logo.png";
 import "../styles/SignUpForm.css";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { theme, Modal, Box, Typography, Button } from './MaterialUIConfig'
 
 
 
@@ -13,11 +14,12 @@ const LoginForm = () => {
     Password: "",
   });
 
-const backend_url = import.meta.env.VITE_BackendURL;
+  const backend_url = import.meta.env.VITE_BackendURL;
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -31,16 +33,23 @@ const backend_url = import.meta.env.VITE_BackendURL;
       navigate("/chat");
     } catch (err) {
       console.error("error: ", err);
+      setModalOpen(true);
       if (err.response && err.response.status === 401) {
         navigate("/forgetpassword");
-    }}
+      }
+    }
   };
+  const handleCloseModal = () => {
+    // Close the modal
+    setModalOpen(false);
+  };
+
 
   return (
     <div className="flex h-screen w-screen ">
       {/* left side with form */}
 
-      
+
 
       <div
         className="flex-shrink-0 w-2/3 bg-light p-8 overflow-y-auto relative"
@@ -48,7 +57,7 @@ const backend_url = import.meta.env.VITE_BackendURL;
       >
         {/* Logo */}
         <img src={LogoImage} alt="Logo" className="mb-8 logo" />
-        
+
         {/* Form container */}
         <div>
           <div className="welcome-text p-4 font-black">
@@ -128,7 +137,15 @@ const backend_url = import.meta.env.VITE_BackendURL;
             >
               Account Login
             </button>
-
+            <div className="mt-10 text-gray-600 text-left sm:-mb-10">
+                <p>Not a member? <a
+                  onClick={() => navigate("/signup")}
+                  className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 cursor-pointer"
+                >
+                  Sign up NOW!!
+                </a>
+                </p>
+              </div>
             {/* Sign-up options */}
             <div className="mt-16 grid space-y-4">
               <button className="group h-12 px-6 border-1 border-gray-300 rounded-2xl transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
@@ -198,6 +215,46 @@ const backend_url = import.meta.env.VITE_BackendURL;
           style={{ objectPosition: "right" }}
         />
       </div>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            width: 500,
+            backgroundColor: "white",
+            border: "2px solid #000",
+            borderTop: '7px solid #FFD700',
+            borderRadius: '12px',
+            boxShadow: 24,
+            p: 4,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: 'center',
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h5" sx={{ fontWeight: 'bold', color: "black" }} component="h2">
+            Oops!!
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Connexion error ! Please retry after confirming your email <strong>{form.Email}</strong>
+          </Typography>
+          <Button onClick={handleCloseModal}
+            variant="contained"
+            color="primary"
+            sx={{
+              mt: 2, width: '100%', paddingTop: '11px', fontSize: '1rem',
+              paddingBottom: '12px', textTransform: 'none', backgroundColor: "black",
+              color: '#fff', marginLeft: 'auto', marginRight: 'auto',
+            }}>
+            Gottcha
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 };

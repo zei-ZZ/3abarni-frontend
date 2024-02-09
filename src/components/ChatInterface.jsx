@@ -100,7 +100,7 @@ const ChatInterface = ({ selectedContact, chatHistory }) => {
       </div>
 
       {/* Message input and send button */}
-      <div id="box" className="p-4 bg-white flex items-center w-full fixed bottom-0" style={{ padding: '10px', width: '48%' }}>
+      <div id="box" className="p-4 bg-white flex items-center w-full bottom-0" style={{ padding: '10px', width: '100%' }}>
         {/* Attachments icon */}
         <div className="p-1">
           <button className="text-black">

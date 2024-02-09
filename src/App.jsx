@@ -3,15 +3,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes
 import axios from "axios";
 import { useState } from "react";
-import LoginForm from "./components/LoginForm";
-import SignUpForm from "./components/SignUpForm";
-import SideBar from "./components/SideBar";
-import ReceiverBar from "./components/ReceiverBar";
-import ParentComponent from "./components/ParentComponent"; 
-import ForgetPassword from "./components/ForgetPassword";
-import Profile from "./components/Profile"; 
-import Settings from "./components/Settings";
 import "./App.css";
+import RouterComponent from "./routes/index";
 
 function App() {
   const [form, setForm] = useState({});
@@ -38,17 +31,8 @@ function App() {
 
   return (
     <Router>
-      <Routes> {/* Wrap your routes with the Routes component */}
-        <Route path="/login" element={<LoginForm handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/signup" element={<SignUpForm handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/sidebar" element={<SideBar handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/receiver" element={<ReceiverBar handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/chat" element={<ParentComponent handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/forgetpassword" element={<ForgetPassword handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/profile" element={<Profile handleChange={handleChange} onSubmit={onSubmit} />} />
-        <Route path="/settings" element={<Settings handleChange={handleChange} onSubmit={onSubmit} />} />
-      </Routes>
-    </Router>
+    <RouterComponent />
+  </Router>
   );
 }
 
